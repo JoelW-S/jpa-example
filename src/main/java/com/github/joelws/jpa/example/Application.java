@@ -31,8 +31,7 @@ public class Application
     void run()
     {
         List<Employee> employees = Arrays
-                .asList(new Employee("Joel", "Build-engineer", 16000L),
-                        new Employee("Jim", "Developer", 16000L),
+                .asList(new Employee("Joel", "Build-engineer", 16000L), new Employee("Jim", "Developer", 16000L),
                         new Employee("Kai", "Developer", 16000L),
                         new Manager("John", "Ops-manager", 55000L, "Management"));
 
@@ -49,9 +48,9 @@ public class Application
 
         e.setName("Joel Whittaker-Smith");
 
-        employeeDao.update(e);
+        println(employeeDao.findById(1).getName(), " equals Joel Whittaker-Smith");
 
-        println(employeeDao.findById(1).getName(), " proves update works!");
+        employeeDao.update(e);
 
         employeeDao.delete(1);
 

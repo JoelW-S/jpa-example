@@ -9,7 +9,9 @@ import java.util.List;
 public class EmployeeDaoImpl implements EmployeeDao
 {
     private EntityManager entityManager;
+
     private EntityTransaction entityTransaction;
+
     private Class<Employee> employeeClass;
 
     public EmployeeDaoImpl(EntityManager entityManager, EntityTransaction entityTransaction)
@@ -28,28 +30,30 @@ public class EmployeeDaoImpl implements EmployeeDao
     }
 
     public Employee update(Employee employee)
-    {   entityTransaction.begin();
+    {
+        entityTransaction.begin();
         entityManager.merge(employee);
         entityTransaction.commit();
         return employee;
     }
 
     public void delete(Integer id)
-    {   entityTransaction.begin();
+    {
+        entityTransaction.begin();
         entityManager.remove(entityManager.getReference(employeeClass, id));
         entityTransaction.commit();
     }
 
     public Employee findById(Integer id)
     {
-        final String query = String.format("SELECT e FROM Employee e WHERE e.id = '%d'",id);
+        final String query = String.format("SELECT e FROM Employee e WHERE e.id = '%d'", id);
         return (Employee) entityManager.createQuery(query).getSingleResult();
     }
 
-    @SuppressWarnings(value = "unchecked")
-    public List<Employee> findAllByRole(String role)
+    @SuppressWarnings(value = "unchecked") public List<Employee> findAllByRole(String role)
     {
-        final String query = String.format("SELECT e FROM Employee e WHERE e.role = '%s'",role);
+        final String query = String.format("SELECT e FROM Employee e WHERE e.role = '%s'", role);
         return (List<Employee>) entityManager.createQuery(query).getResultList();
     }
+
 }
