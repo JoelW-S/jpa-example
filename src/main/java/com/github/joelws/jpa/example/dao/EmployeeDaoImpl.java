@@ -1,57 +1,46 @@
 package com.github.joelws.jpa.example.dao;
 
 import com.github.joelws.jpa.example.models.Employee;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 public class EmployeeDaoImpl implements EmployeeDao
+
 {
+    @PersistenceContext
     private EntityManager entityManager;
 
-    private EntityTransaction entityTransaction;
 
-    private Class<Employee> employeeClass;
-
-    public EmployeeDaoImpl(EntityManager entityManager, EntityTransaction entityTransaction)
-    {
-        this.employeeClass = Employee.class;
-        this.entityManager = entityManager;
-        this.entityTransaction = entityTransaction;
+    public EmployeeDaoImpl() {
     }
 
-    public Employee create(Employee employee)
-    {
-        entityTransaction.begin();
+    @Transactional
+    public Employee create(Employee employee) {
         entityManager.persist(employee);
-        entityTransaction.commit();
         return employee;
     }
 
-    public Employee update(Employee employee)
-    {
-        entityTransaction.begin();
+    @Transactional
+    public Employee update(Employee employee) {
         entityManager.merge(employee);
-        entityTransaction.commit();
         return employee;
     }
 
-    public void delete(Integer id)
-    {
-        entityTransaction.begin();
-        entityManager.remove(entityManager.getReference(employeeClass, id));
-        entityTransaction.commit();
+    @Transactional
+    public void delete(Integer id) {
+        entityManager.remove(entityManager.getReference(Employee.class, id));
     }
 
-    public Employee findById(Integer id)
-    {
+    public Employee findById(Integer id) {
         final String query = String.format("SELECT e FROM Employee e WHERE e.id = '%d'", id);
         return (Employee) entityManager.createQuery(query).getSingleResult();
     }
 
-    @SuppressWarnings(value = "unchecked") public List<Employee> findAllByRole(String role)
-    {
+    @SuppressWarnings(value = "unchecked")
+    public List<Employee> findAllByRole(String role) {
         final String query = String.format("SELECT e FROM Employee e WHERE e.role = '%s'", role);
         return (List<Employee>) entityManager.createQuery(query).getResultList();
     }

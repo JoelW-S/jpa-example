@@ -5,9 +5,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity @Table(name = "employee") public class Employee
-{
-    @Id @GeneratedValue private Integer id;
+@Entity
+@Table(name = "employee")
+public class Employee {
+    @Id
+    @GeneratedValue
+    private Integer id;
 
     private String name;
 
@@ -15,53 +18,44 @@ import javax.persistence.Table;
 
     private long salary;
 
-    public Employee()
-    {
+    public Employee() {
     }
 
-    public Employee(String name, String role, long salary){
+    public Employee(String name, String role, long salary) {
         this.name = name;
         this.role = role;
         this.salary = salary;
     }
 
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getRole()
-    {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(String role)
-    {
+    public void setRole(String role) {
         this.role = role;
     }
 
-    public long getSalary()
-    {
+    public long getSalary() {
         return salary;
     }
 
-    public void setSalary(long salary)
-    {
+    public void setSalary(long salary) {
         this.salary = salary;
     }
 }

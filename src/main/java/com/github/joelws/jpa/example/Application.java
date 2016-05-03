@@ -1,46 +1,28 @@
 package com.github.joelws.jpa.example;
 
 import com.github.joelws.jpa.example.dao.EmployeeDao;
-import com.github.joelws.jpa.example.dao.EmployeeDaoImpl;
 import com.github.joelws.jpa.example.models.Employee;
-import com.github.joelws.jpa.example.models.Manager;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import java.util.Arrays;
 import java.util.List;
 
-public class Application
-{
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-example");
+public class Application {
 
-    private static EntityManager em = emf.createEntityManager();
-
-    private static EntityTransaction entityTransaction = em.getTransaction();
-
-    private static EmployeeDao employeeDao = new EmployeeDaoImpl(em, entityTransaction);
-
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Application application = new Application();
         application.run();
     }
 
-    void run()
-    {
-        List<Employee> employees = Arrays
-                .asList(new Employee("Joel", "Build-engineer", 16000L), new Employee("Jim", "Developer", 16000L),
-                        new Employee("Kai", "Developer", 16000L),
-                        new Manager("John", "Ops-manager", 55000L, "Management"));
-
+    void run() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("META-INF/beans.xml");
+        List<Employee> employees = (List<Employee>) ctx.getBean("employeeList");
+        EmployeeDao employeeDao = (EmployeeDao) ctx.getBean("employeeDao");
         employees.forEach(e -> {
             System.out.println("Creating model in db: " + e.getName());
             employeeDao.create(e);
         });
 
-        employeeDao.findAllByRole("Developer").forEach(e -> System.out.println(e.getName() + " is Developer"));
+        employeeDao.findAllByRole("Developer").forEach(e -> System.out.println(e.getName() + " is a Developer"));
 
         Employee e = employeeDao.findById(1);
 
@@ -48,27 +30,23 @@ public class Application
 
         e.setName("Joel Whittaker-Smith");
 
-        println(employeeDao.findById(1).getName(), " equals Joel Whittaker-Smith");
-
         employeeDao.update(e);
+
+        println(employeeDao.findById(1).getName(), " equals Joel Whittaker-Smith");
 
         employeeDao.delete(1);
 
-        try
-        {
+        try {
             employeeDao.findById(1);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
+
             println("Expected as Employee has just been deleted!");
         }
     }
 
-    void println(String... args)
-    {
+    void println(String... args) {
         StringBuilder sb = new StringBuilder();
-        for (String str : args)
-        {
+        for (String str : args) {
             sb.append(str);
         }
         System.out.println(sb.toString());
