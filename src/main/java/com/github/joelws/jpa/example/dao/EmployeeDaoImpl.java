@@ -1,12 +1,14 @@
 package com.github.joelws.jpa.example.dao;
 
 import com.github.joelws.jpa.example.models.Employee;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Repository
 public class EmployeeDaoImpl implements EmployeeDao
 
 {
