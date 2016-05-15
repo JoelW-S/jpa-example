@@ -1,0 +1,44 @@
+<blueprint xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xmlns:cxf="http://cxf.apache.org/blueprint/core"
+           xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd ">
+
+    <cm:property-placeholder persistent-id="services" placeholder-prefix="@{"
+                             placeholder-suffix="}">
+        <cm:default-properties>
+            <cm:property name="rest.service.url" value="http://localhost:8183/service"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <jaxrs:server id="jpa-example" address="@{rest.service.url}">
+        <jaxrs:serviceBeans>
+            <ref component-id="employeeServiceImpl"/>
+            <ref component-id="departmentServiceImpl"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+    </cxf:bus>
+
+    <reference id="employeeDao" interface="com.github.joelws.jpa.example.dao.EmployeeDao"/>
+
+    <bean id="employeeServiceImpl" class="com.github.joelws.jpa.example.service.EmployeeServiceImpl">
+        <argument index="0" ref="employeeDao"/>
+    </bean>
+
+    <reference id="departmentDao" interface="com.github.joelws.jpa.example.dao.DepartmentDao"/>
+
+    <bean id="departmentServiceImpl" class="com.github.joelws.jpa.example.service.DepartmentServiceImpl">
+        <argument index="0" ref="departmentDao"/>
+    </bean>
+
+</blueprint>

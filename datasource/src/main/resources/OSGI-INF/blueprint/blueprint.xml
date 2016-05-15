@@ -1,0 +1,16 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bean id="exampleDatasource" class="org.h2.jdbcx.JdbcDataSource">
+        <property name="url" value="jdbc:h2:~/test"/>
+        <property name="user" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <service id="dataSource" ref="exampleDatasource" interface="javax.sql.XADataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/example"/>
+            <entry key="datasource.name" value="example"/>
+            <entry key="name" value="example"/>
+        </service-properties>
+    </service>
+</blueprint>
